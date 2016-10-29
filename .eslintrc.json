@@ -1,0 +1,9 @@
+{
+    "env": {
+        "node": true
+    },
+    "extends": "qubyte/ES2015",
+    "rules": {
+        "no-invalid-this": "off"
+    }
+}

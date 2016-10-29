@@ -1,0 +1,30 @@
+{
+  "name": "szalinski",
+  "version": "0.0.0",
+  "description": "An image resizing service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Mark S. Everitt",
+  "license": "MIT",
+  "repository": "github:qubyte/szalinski",
+  "dependencies": {
+    "bunyan": "^1.8.4",
+    "image-type": "^2.1.0",
+    "ioredis": "^2.4.0",
+    "node-fetch": "^1.6.3",
+    "on-headers": "^1.0.1",
+    "sharp": "^0.16.2",
+    "toisu": "^3.0.3",
+    "toisu-router": "^4.0.0",
+    "uuid": "^2.0.3"
+  },
+  "devDependencies": {
+    "es2015-deferred": "^2.0.2",
+    "eslint": "^3.8.1",
+    "eslint-config-qubyte": "^1.0.1",
+    "sandboxed-module": "^2.0.3",
+    "sinon": "^1.17.6"
+  }
+}
