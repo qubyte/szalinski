@@ -17,7 +17,7 @@ which requires redis to be running.
   - [x] logger.js
   - [x] redisClient.js
  - middleware
-  - [ ] calculateResizedDimensions.js
+  - [x] calculateResizedDimensions.js
   - [x] getOriginal.js
   - [x] getResized.js
   - [x] parseAndValidateQuery.js
