@@ -13,7 +13,7 @@ which requires redis to be running.
  - [ ] index.js
  - lib
   - [ ] app.js
-  - [ ] config.js
+  - [x] config.js
   - [x] logger.js
   - [x] redisClient.js
  - middleware
