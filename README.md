@@ -13,11 +13,11 @@ which requires redis to be running.
  - [ ] index.js
  - lib
   - [ ] app.js
-  - [ ] config.js
-  - [ ] logger.js
+  - [x] config.js
+  - [x] logger.js
   - [x] redisClient.js
  - middleware
-  - [ ] calculateResizedDimensions.js
+  - [x] calculateResizedDimensions.js
   - [x] getOriginal.js
   - [x] getResized.js
   - [x] parseAndValidateQuery.js
