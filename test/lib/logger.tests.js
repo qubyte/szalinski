@@ -7,10 +7,8 @@ const SandboxedModule = require('sandboxed-module');
 describe('logger', () => {
   const createLoggerStub = sinon.stub().returns('the-logger-instance');
 
-  let logger;
-
   before(() => {
-    logger = SandboxedModule.require('../../lib/logger', {
+    SandboxedModule.require('../../lib/logger', {
       requires: {
         bunyan: {
           createLogger: createLoggerStub,
