@@ -60,7 +60,7 @@ function persistDetails(hash, details) {
   return redisClient.hmset(hash, Object.assign({}, details, { original: details.original.toString('base64') }));
 }
 
-function getOriginal() {
+function getOriginal(req, res) {
   const logger = this.get('logger');
 
   logger.debug('in getOriginal');
@@ -84,6 +84,15 @@ function getOriginal() {
 
           return persistDetails(hash, details);
         });
+    })
+    .catch(err => {
+      if (err instanceof UnsupportedTypeError) {
+        res.writeHead(400);
+        res.end('URL resolved to an unsupported type.');
+        return;
+      }
+
+      throw err;
     });
 }
 
