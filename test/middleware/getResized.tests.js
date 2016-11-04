@@ -4,16 +4,27 @@ const path = require('path');
 const fs = require('fs');
 const assert = require('assert');
 const sinon = require('sinon');
+const sharp = require('sharp');
 const redisClient = require('../../lib/redisClient');
 const getResized = require('../../middleware/getResized');
 
 const original = fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'original.jpg')); // eslint-disable-line no-sync
-const resized = fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'resized-300x200.jpg')); // eslint-disable-line no-sync
 
 describe('getResized', () => {
   const sandbox = sinon.sandbox.create();
 
   let context;
+  let resized;
+
+  before(() => {
+    return sharp(original)
+      .resize(300)
+      .max()
+      .toBuffer()
+      .then(data => {
+        resized = data;
+      });
+  });
 
   beforeEach(() => {
     context = new Map([
