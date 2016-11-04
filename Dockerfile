@@ -1,4 +1,6 @@
-FROM node
+FROM node:6
+
+ENV NODE_ENV production
 
 WORKDIR /src
 COPY . .
