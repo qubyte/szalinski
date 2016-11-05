@@ -3,6 +3,45 @@
 In image resizing service, written in Node.js with Toisu! and backed by an LRU
 redis cache.
 
+## Usage
+
+This application behaves as intended when the redis instance it pairs with is
+configured as an LRU cache. A [docker-compose](docker-compose.yml) file is
+provided to run both this application and such a redis instance. In order to
+follow the instructions below, you must have docker and docker compose
+installed.
+
+Clone this repository and run
+
+```
+docker-compose up
+```
+
+in the repository directory from a terminal to start the app and redis. Navigate
+to `127.0.0.1:8080/resize?url=<an image url>&width=<desired width>`. Only one of
+width or height is required, but both may be given (the app will use the most
+constraining and maintain aspect ratio).
+
+If you wish to run szalinski without docker, you may use Node.js v6 or up, and
+must have a redis instance running. If the redis instance is running on the same
+machine, the default configuration of the app will suffice and you can boot
+using
+
+```
+node .
+```
+
+## Configuration
+
+The app may be configured by the environment or environment variables.
+
+| option    | environment variable   | command line flag | default     |
+| --------- | ---------------------- | ----------------- | ----------- |
+| appPort   | `SZALINSKI_APP_PORT`   | `--app-port`      | `8080`      |
+| logLevel  | `SZALINSKI_LOG_LEVEL`  | `--log-level`     | debug       |
+| redisHost | `SZALINSKI_REDIS_HOST` | `--redis-host`    | `127.0.0.1` |
+| redisPort | `SZALINSKI_REDIS_PORT` | `--redis-port`    | `6379`      |
+
 ## Test coverage:
 
 Most test modules have been written. The tests for
@@ -25,17 +64,6 @@ which requires redis to be running.
   - [x] requestLogger.js
   - [x] responseTime.js
   - [x] sendImage.js
-
-## Docker
-
-This application behaves as intended when the redis instance it pairs with is
-configured as an LRU cache. A [docker-compose](docker-compose.yml) file is
-provided to run both this application and such a redis instance.
-
-Run `docker-compose up` to start the app and redis. Navigate to
-`127.0.0.1:8080/resize?url=some-url&width=1234`. Only one of width or height is
-required, but both may be given (the app will use the most constraining and
-maintain aspect ratio).
 
 ## Notes
 
