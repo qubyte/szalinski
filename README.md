@@ -1,7 +1,8 @@
 # szalinski
 
 An image resizing service, written in Node.js with Toisu! and backed by an LRU
-redis cache.
+redis cache. This service was written as a technical demo for a job application,
+and now serves as an example Toisu! service.
 
 ## Usage
 
@@ -22,7 +23,7 @@ to `127.0.0.1:8080/resize?url=<an image url>&width=<desired width>`. Only one of
 width or height is required, but both may be given (the app will use the most
 constraining and maintain aspect ratio).
 
-If you wish to run szalinski without docker, you may use Node.js v6 or up, and
+If you wish to run szalinski without docker, you may use Node.js v7.6 or up, and
 must have a redis instance running. If the redis instance is running on the same
 machine, the default configuration of the app will suffice and you can boot
 using
@@ -33,14 +34,14 @@ node .
 
 ## Configuration
 
-The app may be configured by the environment or environment variables.
+The app may be configured by environment variables.
 
-| option    | environment variable   | command line flag | default     |
-| --------- | ---------------------- | ----------------- | ----------- |
-| appPort   | `SZALINSKI_APP_PORT`   | `--app-port`      | `8080`      |
-| logLevel  | `SZALINSKI_LOG_LEVEL`  | `--log-level`     | debug       |
-| redisHost | `SZALINSKI_REDIS_HOST` | `--redis-host`    | `127.0.0.1` |
-| redisPort | `SZALINSKI_REDIS_PORT` | `--redis-port`    | `6379`      |
+| option    | environment variable   | default     |
+| --------- | ---------------------- | ----------- |
+| appPort   | `SZALINSKI_APP_PORT`   | `8080`      |
+| logLevel  | `SZALINSKI_LOG_LEVEL`  | debug       |
+| redisHost | `SZALINSKI_REDIS_HOST` | `127.0.0.1` |
+| redisPort | `SZALINSKI_REDIS_PORT` | `6379`      |
 
 ## Test coverage:
 
@@ -69,7 +70,7 @@ which requires redis to be running.
 
 ### The name
 
-The name is a reference to Honey I shunk the kids.
+The name is a reference to Honey, I Shunk the Kids.
 
 ### Toisu!
 
@@ -79,7 +80,8 @@ promises. The result is something that still uses middleware functions, but
 these functions now only have request and response arguments, much like a
 vanilla Node request handler function. The `next` callback goes away because
 synchronous middleware just returns undefined, and asynchronous middleware
-returns a promise. This is especially fun when async-await is available.
+returns a promise. This is especially fun when using async-await is to build
+middleware.
 
 Toisu! borrows the idea of a shared context from Koa. Unlike Koa, the shared
 context is a `Map` instance (which may be used as a plain object) and provides
@@ -92,11 +94,6 @@ automatic 405 responses for example). As it has only been used for REST, I
 had not realised that it handled query parameters improperly. This exercise led
 to [a fix for that issue](https://github.com/qubyte/toisu-router/pull/7).
 
-Since this is a demonstration, and since the ioredis module is very promise
-friendly, I opted to use Toisu! and explore where it would take me. In a
-production scenario I'd be more likely to opt for a more battle-tested framework
-like Express.
-
 ### Clustering
 
 Clustering has been omitted since the app is intended to run via docker in a
@@ -104,10 +101,9 @@ cluster.
 
 ### Config
 
-I used a module called [konfiga](https://github.com/chrisnewtn/konfiga). Its
-development is owned by a friend of mine, and I contribute to it now and then. I
-find it nice because I favour 12 factor apps (configured by environment), but
-command line flags can be convenient for development.
+I used a module called [configeur](https://github.com/qubyte/configeur), which
+I built to parse environment variables and provide defaults. In the spirit of
+12-factor apps.
 
 ### Logging
 
@@ -150,3 +146,7 @@ The client module I've used is ioredis, which provides a nice promise based API.
 
 This service keeps entire buffers in memory. Streams would likely allow buffers
 to be piped to the client to avoid memory consumption per request.
+
+When two requests for the same image, or same new size of an image, come in at
+the same time, the image will be processed and cached twice. This can be avoided
+with the use of a lock and redis pubsub.
