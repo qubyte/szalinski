@@ -3,9 +3,10 @@
 const sharp = require('sharp');
 const redisClient = require('../lib/redisClient');
 
-function getResizedFromCache(hash, width, height) {
-  return redisClient.hget(hash, `${width}:${height}`)
-    .then(resized => resized && Buffer.from(resized, 'base64'));
+async function getResizedFromCache(hash, width, height) {
+  const resized = await redisClient.hget(hash, `${width}:${height}`);
+
+  return resized && Buffer.from(resized, 'base64');
 }
 
 function createResized(buffer, type, width, height) {
@@ -20,7 +21,7 @@ function persistResized(hash, width, height, buffer) {
   return redisClient.hset(hash, `${width}:${height}`, buffer.toString('base64'));
 }
 
-function getResized() {
+async function getResized() {
   const logger = this.get('logger');
 
   logger.debug('in getResized');
@@ -29,23 +30,21 @@ function getResized() {
   const width = this.get('resized-image-width');
   const height = this.get('resized-image-height');
 
-  return getResizedFromCache(hash, width, height)
-    .then(buffer => {
-      if (buffer) {
-        logger.debug('retrieved resized buffer from cache');
+  let buffer = await getResizedFromCache(hash, width, height);
 
-        return this.set('resized-image-buffer', buffer);
-      }
+  if (buffer) {
+    logger.debug('retrieved resized buffer from cache');
 
-      return createResized(this.get('original-image-buffer'), this.get('image-type'), width, height)
-        .then(buffer => {
-          logger.debug('created resized buffer from original');
+    return this.set('resized-image-buffer', buffer);
+  }
 
-          this.set('resized-image-buffer', buffer);
+  buffer = await createResized(this.get('original-image-buffer'), this.get('image-type'), width, height);
 
-          return persistResized(hash, width, height, buffer);
-        });
-    });
+  logger.debug('created resized buffer from original');
+
+  this.set('resized-image-buffer', buffer);
+
+  return persistResized(hash, width, height, buffer);
 }
 
 module.exports = getResized;
