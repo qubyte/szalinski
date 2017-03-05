@@ -18,7 +18,7 @@ describe('logger', () => {
           }
         },
         './config': {
-          logLevel: 'the-log-level'
+          SZALINSKI_LOG_LEVEL: 'the-log-level'
         }
       }
     });

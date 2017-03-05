@@ -5,8 +5,8 @@ const app = require('./lib/app');
 const logger = require('./lib/logger');
 const config = require('./lib/config');
 
-const server = http.createServer(app.requestHandler).listen(config.appPort, () => {
-  logger.info(`listening on ${config.appPort}`);
+const server = http.createServer(app.requestHandler).listen(config.SZALINSKI_APP_PORT, () => {
+  logger.info(`listening on ${config.SZALINSKI_APP_PORT}`);
 });
 
 function attemptGracefulExit(err, reason) {
