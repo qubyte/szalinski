@@ -14,8 +14,8 @@ describe('redisClient', () => {
     redisClient = SandboxedModule.require('../../lib/redisClient', {
       requires: {
         './config': {
-          redisHost: 'the-redis-host',
-          redisPort: 'the-redis-port'
+          SZALINSKI_REDIS_HOST: 'the-redis-host',
+          SZALINSKI_REDIS_PORT: 'the-redis-port'
         },
         ioredis: ioredisStub
       }

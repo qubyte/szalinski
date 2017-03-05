@@ -1,7 +1,9 @@
 'use strict';
 
 function calculateResizedDimensions() {
-  this.get('logger').debug('in calculateResizedDimensions');
+  const logger = this.get('logger');
+
+  logger.debug('in calculateResizedDimensions');
 
   const requestedWidth = this.get('requested-image-width') || Infinity;
   const requestedHeight = this.get('requested-image-height') || Infinity;
@@ -17,7 +19,7 @@ function calculateResizedDimensions() {
     resizedHeight = Math.round(resizedWidth * originalHeight / originalWidth);
   }
 
-  this.get('logger').info(`Resizing to ${resizedWidth}:${resizedHeight}`);
+  logger.info(`Resizing to ${resizedWidth}:${resizedHeight}`);
 
   this.set('resized-image-width', resizedWidth);
   this.set('resized-image-height', resizedHeight);

@@ -13,5 +13,4 @@ function requestLogger(req) {
   childLogger.debug({ req }, 'Incoming request.');
 }
 
-
 module.exports = requestLogger;

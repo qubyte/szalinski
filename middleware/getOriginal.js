@@ -7,45 +7,41 @@ const redisClient = require('../lib/redisClient');
 
 class UnsupportedTypeError extends Error {}
 
-function getOriginalFromCache(hash) {
-  return redisClient.hmget(hash, 'original', 'width', 'height', 'type', 'mime')
-    .then(([original, width, height, type, mime]) => {
-      if (!original) {
-        return false;
-      }
+async function getOriginalFromCache(hash) {
+  const [original, width, height, type, mime] = await redisClient.hmget(hash, 'original', 'width', 'height', 'type', 'mime');
 
-      return {
-        original: Buffer.from(original, 'base64'),
-        width: parseInt(width, 10),
-        height: parseInt(height, 10),
-        type,
-        mime
-      };
-    });
+  if (!original) {
+    return false;
+  }
+
+  return {
+    original: Buffer.from(original, 'base64'),
+    width: parseInt(width, 10),
+    height: parseInt(height, 10),
+    type,
+    mime
+  };
 }
 
-function getOriginalByUrl(url) {
-  return fetch(url)
-    .then(response => response.buffer())
-    .then(buffer => {
-      const type = imageType(buffer);
+async function getOriginalByUrl(url) {
+  const response = await fetch(url);
+  const buffer = await response.buffer();
+  const type = imageType(buffer);
 
-      if (!type || ['jpg', 'png', 'webp'].indexOf(type.ext) === -1) {
-        throw new UnsupportedTypeError();
-      }
+  if (!type || ['jpg', 'png', 'webp'].indexOf(type.ext) === -1) {
+    throw new UnsupportedTypeError();
+  }
 
-      return sharp(buffer).metadata()
-        .then(meta => {
-          return {
-            original: buffer,
-            width: meta.width,
-            height: meta.height,
-            type: type.ext === 'jpg' ? 'jpeg' : type.ext,
-            mime: type.mime,
-            url
-          };
-        });
-    });
+  const meta = await sharp(buffer).metadata();
+
+  return {
+    original: buffer,
+    width: meta.width,
+    height: meta.height,
+    type: type.ext === 'jpg' ? 'jpeg' : type.ext,
+    mime: type.mime,
+    url
+  };
 }
 
 function setDetails(context, details) {
@@ -60,7 +56,7 @@ function persistDetails(hash, details) {
   return redisClient.hmset(hash, Object.assign({}, details, { original: details.original.toString('base64') }));
 }
 
-function getOriginal(req, res) {
+async function getOriginal(req, res) {
   const logger = this.get('logger');
 
   logger.debug('in getOriginal');
@@ -68,32 +64,31 @@ function getOriginal(req, res) {
   const hash = this.get('image-url-hash');
   const url = this.get('image-url');
 
-  return getOriginalFromCache(hash)
-    .then(details => {
-      if (details) {
-        logger.debug('got original buffer from cache');
+  let details = await getOriginalFromCache(hash);
 
-        return setDetails(this, details);
-      }
+  if (details) {
+    logger.debug('got original buffer from cache');
 
-      return getOriginalByUrl(url)
-        .then(details => {
-          logger.debug('got original buffer by request');
+    return setDetails(this, details);
+  }
 
-          setDetails(this, details);
+  try {
+    details = await getOriginalByUrl(url);
+  } catch (e) {
+    if (e instanceof UnsupportedTypeError) {
+      res.writeHead(400);
+      res.end('URL resolved to an unsupported type.');
+      return;
+    }
 
-          return persistDetails(hash, details);
-        });
-    })
-    .catch(err => {
-      if (err instanceof UnsupportedTypeError) {
-        res.writeHead(400);
-        res.end('URL resolved to an unsupported type.');
-        return;
-      }
+    throw e;
+  }
 
-      throw err;
-    });
+  logger.debug('got original buffer by request');
+
+  setDetails(this, details);
+
+  return persistDetails(hash, details);
 }
 
 module.exports = getOriginal;
