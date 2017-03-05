@@ -5,52 +5,44 @@ const sinon = require('sinon');
 const SandboxedModule = require('sandboxed-module');
 
 describe('config', () => {
-  let konfigaStub;
+  let configeurStub;
   let config;
 
   before(() => {
-    konfigaStub = sinon.stub().returns('konfiga-return-val');
+    configeurStub = sinon.stub().returns('configeur-return-val');
 
     config = SandboxedModule.require('../../lib/config', {
       requires: {
-        konfiga: konfigaStub
+        configeur: configeurStub
       }
     });
   });
 
-  it('calls konfiga once', () => {
-    assert.equal(konfigaStub.callCount, 1);
+  it('calls configeur once', () => {
+    assert.equal(configeurStub.callCount, 1);
   });
 
-  it('exports konfiga\'s return value', () => {
-    assert.equal(config, 'konfiga-return-val');
+  it('exports configeur\'s return value', () => {
+    assert.equal(config, 'configeur-return-val');
   });
 
-  it('passes an object with 4 keys to konfiga', () => {
-    assert.equal(Object.keys(konfigaStub.args[0][0]).length, 4);
+  it('passes an object with 4 keys to configeur', () => {
+    assert.equal(Object.keys(configeurStub.args[0][0]).length, 4);
   });
 
-  describe('appPort', () => {
+  describe('SZALINSKI_APP_PORT', () => {
     let appPort;
 
     before(() => {
-      appPort = konfigaStub.args[0][0].appPort;
+      appPort = configeurStub.args[0][0].SZALINSKI_APP_PORT;
     });
 
     it('has a default value of 8080', () => {
       assert.equal(appPort.defaultValue, 8080);
     });
 
-    it('has an env variable name of SZALINSKI_APP_PORT', () => {
-      assert.equal(appPort.envVariableName, 'SZALINSKI_APP_PORT');
-    });
-
-    it('has a command line name of app-port', () => {
-      assert.equal(appPort.cmdLineArgName, 'app-port');
-    });
-
-    it('has a type of Number', () => {
-      assert.equal(appPort.type, Number);
+    it('has a type of \'number\'', () => {
+      assert.equal(appPort.type, 'number');
     });
   });
 
@@ -58,23 +50,15 @@ describe('config', () => {
     let logLevel;
 
     before(() => {
-      logLevel = konfigaStub.args[0][0].logLevel;
+      logLevel = configeurStub.args[0][0].SZALINSKI_LOG_LEVEL;
     });
 
     it('has a default value of debug', () => {
       assert.equal(logLevel.defaultValue, 'debug');
     });
 
-    it('has an env variable name of SZALINSKI_LOG_LEVEL', () => {
-      assert.equal(logLevel.envVariableName, 'SZALINSKI_LOG_LEVEL');
-    });
-
-    it('has a command line name of log-level', () => {
-      assert.equal(logLevel.cmdLineArgName, 'log-level');
-    });
-
-    it('has a type of String', () => {
-      assert.equal(logLevel.type, String);
+    it('has the default type (string)', () => {
+      assert.strictEqual(logLevel.type, undefined);
     });
   });
 
@@ -82,23 +66,15 @@ describe('config', () => {
     let redisHost;
 
     before(() => {
-      redisHost = konfigaStub.args[0][0].redisHost;
+      redisHost = configeurStub.args[0][0].SZALINSKI_REDIS_HOST;
     });
 
-    it('has a default value of 127.0.0.1', () => {
+    it('has a default value of \'127.0.0.1\'', () => {
       assert.equal(redisHost.defaultValue, '127.0.0.1');
     });
 
-    it('has an env variable name of SZALINSKI_REDIS_HOST', () => {
-      assert.equal(redisHost.envVariableName, 'SZALINSKI_REDIS_HOST');
-    });
-
-    it('has a command line name of redis-host', () => {
-      assert.equal(redisHost.cmdLineArgName, 'redis-host');
-    });
-
-    it('has a type of String', () => {
-      assert.equal(redisHost.type, String);
+    it('has the default type (string)', () => {
+      assert.strictEqual(redisHost.type, undefined);
     });
   });
 
@@ -106,23 +82,15 @@ describe('config', () => {
     let redisPort;
 
     before(() => {
-      redisPort = konfigaStub.args[0][0].redisPort;
+      redisPort = configeurStub.args[0][0].SZALINSKI_REDIS_PORT;
     });
 
-    it('has a default value of 6379', () => {
-      assert.equal(redisPort.defaultValue, 6379);
+    it('has a default value of \'6379\'', () => {
+      assert.equal(redisPort.defaultValue, '6379');
     });
 
-    it('has an env variable name of SZALINSKI_REDIS_PORT', () => {
-      assert.equal(redisPort.envVariableName, 'SZALINSKI_REDIS_PORT');
-    });
-
-    it('has a command line name of redis-port', () => {
-      assert.equal(redisPort.cmdLineArgName, 'redis-port');
-    });
-
-    it('has a type of Number', () => {
-      assert.equal(redisPort.type, Number);
+    it('has a type of \'number\'', () => {
+      assert.equal(redisPort.type, 'number');
     });
   });
 });
