@@ -1,5 +1,7 @@
 # szalinski
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/qubyte/szalinski.svg)](https://greenkeeper.io/)
+
 An image resizing service, written in Node.js with Toisu! and backed by an LRU
 redis cache. This service was written as a technical demo for a job application,
 and now serves as an example Toisu! service.

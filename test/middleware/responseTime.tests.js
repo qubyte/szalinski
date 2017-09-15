@@ -5,19 +5,21 @@ const sinon = require('sinon');
 const SandboxedModule = require('sandboxed-module');
 
 describe('responseTime', () => {
-  const sandbox = sinon.sandbox.create();
-  const onHeadersStub = sandbox.stub();
-  const nowStub = sandbox.stub();
-  const debugStub = sandbox.stub();
-
-  nowStub.onCall(0).returns(10);
-  nowStub.onCall(1).returns(23);
-
+  let onHeadersStub;
+  let nowStub;
+  let debugStub;
   let responseTime;
   let context;
   let res;
 
-  before(() => {
+  beforeEach(() => {
+    onHeadersStub = sinon.stub();
+    nowStub = sinon.stub();
+    debugStub = sinon.stub();
+
+    nowStub.onCall(0).returns(10);
+    nowStub.onCall(1).returns(23);
+
     responseTime = SandboxedModule.require('../../middleware/responseTime', {
       requires: {
         'on-headers': onHeadersStub
@@ -28,17 +30,12 @@ describe('responseTime', () => {
         }
       }
     });
-  });
 
-  beforeEach(() => {
     context = new Map([['logger', { debug: debugStub }]]);
-    res = {
-      setHeader: sandbox.stub()
-    };
-  });
 
-  afterEach(() => {
-    sandbox.reset();
+    res = {
+      setHeader: sinon.stub()
+    };
   });
 
   describe('when a response is about to end and no hash is on the middleware context', () => {
