@@ -29,6 +29,6 @@
     "mocha": "^3.1.2",
     "nock": "^9.0.2",
     "sandboxed-module": "^2.0.3",
-    "sinon": "^3.2.1"
+    "sinon": "^4.0.0"
   }
 }
