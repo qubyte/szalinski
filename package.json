@@ -16,7 +16,7 @@
     "configeur": "^3.0.2",
     "image-type": "^3.0.0",
     "ioredis": "^3.1.4",
-    "node-fetch": "^1.6.3",
+    "node-fetch": "^2.0.0",
     "on-headers": "^1.0.1",
     "sharp": "^0.18.3",
     "toisu": "^3.0.3",
