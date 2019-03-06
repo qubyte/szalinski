@@ -14,7 +14,7 @@
   "dependencies": {
     "bunyan": "^1.8.4",
     "configeur": "^4.0.0",
-    "image-type": "^3.0.0",
+    "image-type": "^4.0.0",
     "ioredis": "^3.1.4",
     "node-fetch": "^2.0.0",
     "on-headers": "^1.0.1",
