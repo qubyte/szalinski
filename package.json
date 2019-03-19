@@ -18,7 +18,7 @@
     "ioredis": "^3.1.4",
     "node-fetch": "^2.0.0",
     "on-headers": "^1.0.1",
-    "sharp": "^0.20.0",
+    "sharp": "^0.22.0",
     "toisu": "^3.0.3",
     "toisu-router": "^4.0.0",
     "uuid": "^3.1.0"
