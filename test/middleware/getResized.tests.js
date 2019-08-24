@@ -18,8 +18,7 @@ describe('getResized', () => {
 
   before(() => {
     return sharp(original)
-      .resize(300)
-      .max()
+      .resize(300, 300, { fit: 'inside' })
       .toBuffer()
       .then(data => {
         resized = data;
