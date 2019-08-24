@@ -11,8 +11,7 @@ async function getResizedFromCache(hash, width, height) {
 
 function createResized(buffer, type, width, height) {
   return sharp(buffer)
-    .resize(width, height)
-    .max()
+    .resize(width, height, { fit: 'inside' })
     .toFormat(type)
     .toBuffer();
 }
