@@ -27,7 +27,7 @@
     "eslint": "^5.0.0",
     "eslint-config-qubyte": "^2.0.0",
     "mocha": "^6.0.0",
-    "nock": "^10.0.0",
+    "nock": "^11.8.1",
     "sandboxed-module": "^2.0.3",
     "sinon": "^7.2.4"
   }
