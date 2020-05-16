@@ -15,7 +15,7 @@
     "bunyan": "^1.8.4",
     "configeur": "^4.0.0",
     "image-type": "^4.0.0",
-    "ioredis": "^3.1.4",
+    "ioredis": "^4.17.0",
     "node-fetch": "^2.0.0",
     "on-headers": "^1.0.1",
     "sharp": "^0.21.0",
